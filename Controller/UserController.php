@@ -2,8 +2,8 @@
     class UserController extends BaseController{
         
         public function listAction(){
-            $requestMethod = $_SERVER["REQUEST_METHOD"];
-            $stringParamsArray = $this->geStringParams();
+            $requestMethod = $_SERVER["REQUEST_METHOD"];            
+            $stringParamsArray = $this->getStringParams();
 
             if(strtoupper($requestMethod)  == 'GET'){
                 try {
@@ -13,12 +13,13 @@
                     if(isset($stringParamsArray['limit']) && $stringParamsArray['limit']){
                         $intLimit = $stringParamsArray['limit'];
                     }
-
-                    $userArray = $userModel->getUsers($intLimit);
-                    $responseData = json_encode($usersArray);
+                    
+                    $userArray = $userModel->getUser($intLimit);
+                    $responseData = json_encode($userArray);
+                    
                 } catch (Throwable $th) {
-                    throw $th->getMessage();
-                    return;
+                    $errorDescription = $th->getMessage();
+                    $errorHeader = 'HTTP/1.1 500 Internal Server Error';
                 }
             }else{
                 $errorDescription = 'Metodo não suportado';
